@@ -5,18 +5,25 @@ import { Repository } from "typeorm";
 import { TYPES } from "./TYPES";
 
 import "./presentation/AccountController";
+import { AccountService, IAccountService } from "./application/AccountService";
 
 export default async function loadContainer() {
 
     const container = new Container();
 
-    // container.bind<IExample>(TYPES.IExample).to(ParticularExample);
+
+    container.bind<IAccountService>(TYPES.IAccountService).to(AccountService)
 
     const dbBindings = new AsyncContainerModule(async bind => {
         const connectedDb = await db.initialize();
+       
         bind<Repository<Account>>(TYPES.AccountDataRepo).toDynamicValue(() => {
             return connectedDb.getRepository(Account);
         }).inRequestScope();
+
+        // bind<Repository<Flight>>(TYPES.FlightDataRepo).toDynamicValue(() => {
+        //     return connectedDb.getRepository(Flight);
+        // }).inRequestScope();
     });
 
     await container.loadAsync(dbBindings);

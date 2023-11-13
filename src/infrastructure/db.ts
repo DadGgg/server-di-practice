@@ -12,7 +12,7 @@ const db = new DataSource({
         Account
     ],
     logging: true,
-    synchronize: false,
+    synchronize: true,
     options: {
         encrypt: false // please add this for ms sql
     }
